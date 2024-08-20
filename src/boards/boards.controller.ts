@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch, UsePipes, ValidationPipe } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { Board, BoardStatus } from './board.model';
 import { CreateBoardDto } from './dto/create-board.dto';
@@ -14,17 +14,15 @@ export class BoardsController {
 
     // 게시물 생성 
     @Post()
+    @UsePipes(ValidationPipe)
     createBoard(
-        // @Body('title') title: string,
-        // @Body('description') description: string
-
         // Dto 적용
         @Body() CreateBoardDto: CreateBoardDto
     ): Board {
         return this.boardsService.createBoard(CreateBoardDto)
     }
 
-    // 특정 id로 게시물 가져오기 설정(@Body 대신 @pParma으로 설정)
+    // 특정 id로 게시물 가져오기 설정(@Body 대신 @Parma으로 설정)
     @Get('/:id')
     getBoardById(@Param('id') id: string): Board {
         return this.boardsService.getBoardById(id);
