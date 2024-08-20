@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch } from '@nestjs/common';
 import { BoardsService } from './boards.service';
-import { Board } from './board.model';
+import { Board, BoardStatus } from './board.model';
+import { CreateBoardDto } from './dto/create-board.dto';
 
 @Controller('boards')
 export class BoardsController {
@@ -13,10 +14,34 @@ export class BoardsController {
 
     // 게시물 생성 
     @Post()
-    createBoard(@Body('title') title: string,
-    @Body('description') description: string
+    createBoard(
+        // @Body('title') title: string,
+        // @Body('description') description: string
+
+        // Dto 적용
+        @Body() CreateBoardDto: CreateBoardDto
     ): Board {
-        return this.boardsService.createBoard(title, description)
+        return this.boardsService.createBoard(CreateBoardDto)
     }
 
+    // 특정 id로 게시물 가져오기 설정(@Body 대신 @pParma으로 설정)
+    @Get('/:id')
+    getBoardById(@Param('id') id: string): Board {
+        return this.boardsService.getBoardById(id);
+    }
+
+    // 특정 id로 게시물 지우기
+    @Delete('/:id')
+    deleteBoard(@Param('id') id: string): void {
+        this.boardsService.deleteBoard(id);
+    }
+
+    // 특정 id로 게시물 상태 업데이트
+    @Patch('/:id/status')
+    updateBoardStatus(
+        @Param('id') id: string,
+        @Body('status') status: BoardStatus
+    ) {
+        return this.boardsService.updateBoardStatus(id, status)
+    }
 }
