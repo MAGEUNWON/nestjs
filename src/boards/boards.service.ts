@@ -2,10 +2,21 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Board, BoardStatus } from './board.model';
 import {v1 as uuid } from 'uuid' // 유니크한 id 값을 주기 위해 설치
 import { CreateBoardDto } from './dto/create-board.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Board2 } from './board.entity';
+import { Repository } from 'typeorm';
+
 
 @Injectable()
 export class BoardsService {
     private boards: Board[] = [];
+    
+    // 레포지토리 추가 
+    constructor(
+        @InjectRepository(Board2)
+        private boardsRepository: Repository<Board2>,
+    ) {}
+    
 
     getAllBoards(): Board[] {
       return this.boards;
