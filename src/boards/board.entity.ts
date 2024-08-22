@@ -1,8 +1,9 @@
-import { BaseEntity, Column, PrimaryGeneratedColumn } from "typeorm";
-import { BoardStatus } from "./board.model";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BoardStatus } from "./board.status.enum";
 
 // 엔티티 사용해서 board 테이블 만들기
-export class Board2 extends BaseEntity {
+@Entity()
+export class Board extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
