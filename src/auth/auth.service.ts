@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +15,11 @@ export class AuthService {
     // 회원가입 기능
     async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
         const {username, password } = authCredentialsDto;
-        const user = this.userRepository.create({ username, password });
+
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const user = this.userRepository.create({ username, password: hashedPassword });
 
         // nestjs에서 에러 발생시 try, catch로 잡아주지 않으면 에러가 controller 레벨로 가서 그냥 500 에러를 던짐. 
         try {
