@@ -9,5 +9,5 @@ export class User extends BaseEntity {
     username: string;
 
     @Column()
-    psssword : string;
+    password : string;
 }

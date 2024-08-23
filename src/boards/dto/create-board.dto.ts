@@ -1,4 +1,4 @@
-import { isNotEmpty, IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from "class-validator";
 
 // DTO생성
 export class CreateBoardDto {
