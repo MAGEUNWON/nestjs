@@ -4,12 +4,14 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import * as bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectRepository(User)
-        private userRepository: Repository<User>
+        private userRepository: Repository<User>,
+        private jwtService: JwtService
     ) {}
 
     // 회원가입 기능
@@ -34,12 +36,16 @@ export class AuthService {
     }
 
      // 로그인 기능
-     async signIn(authCredentialsDto: AuthCredentialsDto): Promise<string> {
+     async signIn(authCredentialsDto: AuthCredentialsDto): Promise<{accessToken: string}> {
         const { username, password } = authCredentialsDto;
         const user = await this.userRepository.findOneBy({ username });
 
         if(user && (await bcrypt.compare(password, user.password))) {
-            return 'login success';
+            // 유저 토큰 생성 (Secret + Payload)
+            const payload = { username };
+            const accessToken = await this.jwtService.sign(payload);
+
+            return { accessToken };
         } else {
             throw new UnauthorizedException('login failed');
         }
