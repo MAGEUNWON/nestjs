@@ -83,8 +83,8 @@ export class BoardsService {
     }
 
     // 특정 id로 게시물 지우기
-    async deleteBoard(id: number): Promise<void> {
-        const result = await this.boardRepository.delete(id);
+    async deleteBoard(id: number, user:User): Promise<void> {
+        const result = await this.boardRepository.delete({id, user});
 
         // remove 대신 delete를 사용하면 따로 에러메시지는 안나오기 때문에 추가 해 줌. 
         if(result.affected === 0) {
