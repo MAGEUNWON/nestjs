@@ -37,8 +37,10 @@ export class BoardsController {
 
     // 모든 게시물 가져오기
     @Get()
-    getAllBoard(): Promise<Board[]> {
-        return this.boardsService.getAllBoards();
+    getAllBoard(
+        @GetUser() user:User
+    ): Promise<Board[]> {
+        return this.boardsService.getAllBoards(user);
     }
   
 
