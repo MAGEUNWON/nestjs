@@ -5,6 +5,8 @@ import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
 import { Board } from './board.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 
 @Controller('boards')
 @UseGuards(AuthGuard()) // 인증된 사람만 게시물 접근 할 수 있도록 설정
@@ -19,8 +21,9 @@ export class BoardsController {
     // 게시물 생성 
     @Post()
     @UsePipes(ValidationPipe)
-    createBoard(@Body() CreateBoardDto: CreateBoardDto): Promise<Board> {
-        return this.boardsService.createBoard(CreateBoardDto);
+    createBoard(@Body() CreateBoardDto: CreateBoardDto,
+    @GetUser() user:User): Promise<Board> {
+        return this.boardsService.createBoard(CreateBoardDto, user);
     }
 
     // @Post()
